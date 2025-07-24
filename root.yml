@@ -1,0 +1,27 @@
+# Check out https://docs.codemagic.io/getting-started/building-a-react-native-app/ for more information
+# Please review and update values in curly braces
+
+workflows:
+    react-native:
+        name: React Native App
+        environment:
+            vars:
+                XCODE_WORKSPACE: &quotdadhesab&quot
+                XCODE_SCHEME: &quotdadhesab.sibapp&quot
+            node: latest
+        scripts:
+            - npm install
+            - echo &quotsdk.dir=$HOME/programs/android-sdk-macosx&quot > &quot$FCI_BUILD_DIR/android/local.properties&quot
+            # - |
+                # build Android
+                # cd android
+                # ./gradlew assembleDebug
+            - |
+                # build iOS
+                cd ios
+                pod install
+                xcodebuild build -workspace &quot$XCODE_WORKSPACE.xcworkspace&quot -scheme &quot$XCODE_SCHEME&quot CODE_SIGN_IDENTITY=&quot&quot CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+        artifacts:
+            # - android/app/build/outputs/**/*.apk
+            - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+            - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
